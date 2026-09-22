@@ -1,1 +1,29 @@
-/* TODO: voeg alleen lokale styles voor statement form toe en gebruik de globale design-tokens. */
+@import url("../../../../../../styles/auth-form.css");
+
+.field-textarea {
+  padding: var(--space-3);
+  font-family: inherit;
+  font-size: var(--font-size-md);
+  color: var(--color-text-primary);
+  resize: vertical;
+  background-color: var(--color-field-background);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast);
+}
+
+.field-textarea:focus {
+  border-color: var(--color-accent-blue);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
+
+.field-textarea.field-input-error {
+  border-color: var(--color-danger);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}

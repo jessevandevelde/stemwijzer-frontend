@@ -1,1 +1,9 @@
-<!-- TODO: voeg hier de semantische en toegankelijke template voor status badge toe. -->
+<span
+  class="badge"
+  [class.badge-blue]="tone() === 'blue'"
+  [class.badge-gray]="tone() === 'gray'"
+  [class.badge-green]="tone() === 'green'"
+  [class.badge-red]="tone() === 'red'"
+>
+  <ng-content />
+</span>

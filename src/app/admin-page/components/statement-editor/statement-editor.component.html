@@ -1,1 +1,21 @@
-<!-- TODO: voeg hier de semantische en toegankelijke template voor statement editor toe. -->
+<div class="editor-page">
+  <p class="breadcrumb">Electorale productieomgeving · Stellingen</p>
+  <h1 class="page-title">{{ statementId === null ? 'Nieuwe stelling' : 'Stelling bewerken' }}</h1>
+
+  @if (notFound()) {
+    <stw-security-notice variant="error">Deze stelling kon niet worden gevonden.</stw-security-notice>
+  } @else {
+    @if (errorMessage(); as message) {
+      <stw-security-notice variant="error">{{ message }}</stw-security-notice>
+    }
+    <div class="editor-card">
+      <stw-statement-form
+        (cancelled)="handleCancel()"
+        (submitForm)="handleSubmit($event)"
+        [categories]="categories"
+        [initialValue]="initialValue()"
+        [loading]="saving()"
+      />
+    </div>
+  }
+</div>

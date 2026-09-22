@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 
 export interface AuthSession {
   readonly token: string
+  readonly userId: number
+  readonly name: string
   readonly email: string
 }
 
@@ -12,7 +14,9 @@ function isAuthSession(value: unknown): value is AuthSession {
     return false;
   }
 
-  return 'token' in value && 'email' in value && typeof value.token === 'string' && typeof value.email === 'string';
+  return 'token' in value && 'userId' in value && 'name' in value && 'email' in value
+    && typeof value.token === 'string' && typeof value.userId === 'number'
+    && typeof value.name === 'string' && typeof value.email === 'string';
 }
 
 @Injectable({

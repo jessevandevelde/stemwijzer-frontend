@@ -18,9 +18,16 @@ export class LoginPageService {
   private readonly auth = inject(AuthService);
 
   public login(credentials: LoginCredentials): Observable<void> {
-    return this.api.post<LoginResponse>('/auth/login', credentials).pipe(
+    const body = { email: credentials.email, password: credentials.password };
+
+    return this.api.post<LoginResponse>('/auth/login', body).pipe(
       map((response) => {
-        this.auth.startSession({ token: response.token, email: credentials.email }, credentials.rememberMe);
+        this.auth.startSession({
+          token: response.token,
+          userId: response.user.id,
+          name: response.user.name,
+          email: response.user.email,
+        }, credentials.rememberMe);
       }),
       catchError((error: unknown) => throwError(() => this.toUserFacingError(error))),
     );

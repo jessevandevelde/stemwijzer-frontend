@@ -4,3 +4,23 @@
 * {
   box-sizing: border-box;
 }
+
+html,
+body {
+  min-width: 20rem;
+  min-height: 100%;
+  margin: 0;
+  background: var(--color-surface);
+  color: var(--color-on-surface);
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+  min-height: 100dvh;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-primary) 45%, transparent);
+  outline-offset: 2px;
+}

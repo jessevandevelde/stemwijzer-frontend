@@ -1,1 +1,20 @@
-<!-- TODO: voeg hier de semantische en toegankelijke template voor party editor toe. -->
+<div class="editor-page">
+  <p class="breadcrumb">Electorale productieomgeving · Partijen</p>
+  <h1 class="page-title">{{ partyId === null ? 'Nieuwe partij' : 'Partij bewerken' }}</h1>
+
+  @if (notFound()) {
+    <stw-security-notice variant="error">Deze partij kon niet worden gevonden.</stw-security-notice>
+  } @else {
+    @if (errorMessage(); as message) {
+      <stw-security-notice variant="error">{{ message }}</stw-security-notice>
+    }
+    <div class="editor-card">
+      <stw-party-form
+        (cancelled)="handleCancel()"
+        (submitForm)="handleSubmit($event)"
+        [initialValue]="initialValue()"
+        [loading]="saving()"
+      />
+    </div>
+  }
+</div>

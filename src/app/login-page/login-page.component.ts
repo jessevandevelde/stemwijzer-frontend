@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { BrandMarkComponent } from '../components/brand-mark/brand-mark.component';
 import { SecurityNoticeComponent } from '../components/security-notice/security-notice.component';
 import { LoginFormComponent } from './components/login-form/login-form.component';
@@ -17,11 +18,11 @@ export class LoginPageComponent {
 
   protected readonly errorMessage = signal<string | null>(null);
 
-  protected readonly loginSucceeded = signal(false);
-
   protected readonly currentYear = new Date().getFullYear();
 
   private readonly loginPageService = inject(LoginPageService);
+
+  private readonly router = inject(Router);
 
   protected handleLogin(credentials: LoginCredentials): void {
     this.loading.set(true);
@@ -30,7 +31,7 @@ export class LoginPageComponent {
     this.loginPageService.login(credentials).subscribe({
       next: () => {
         this.loading.set(false);
-        this.loginSucceeded.set(true);
+        void this.router.navigateByUrl('/admin');
       },
       error: (error: unknown) => {
         this.loading.set(false);

@@ -1,2 +1,11 @@
-// TODO: bouw de Angular-component voor empty state.
-// Leg inputs en outputs expliciet vast en haal data buiten de presentatiecomponent op.
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+
+@Component({
+  selector: 'stw-empty-state',
+  templateUrl: './empty-state.component.html',
+  styleUrl: './empty-state.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class EmptyStateComponent {
+  public readonly message = input.required<string>();
+}

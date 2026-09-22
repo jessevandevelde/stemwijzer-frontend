@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
-export type ButtonVariant = 'primary' | 'secondary';
+export type ButtonVariant = 'primary' | 'secondary' | 'danger';
 export type ButtonType = 'button' | 'submit';
+export type ButtonSize = 'sm' | 'md';
 
 @Component({
   selector: 'stw-button',
@@ -11,6 +12,8 @@ export type ButtonType = 'button' | 'submit';
 })
 export class ButtonComponent {
   public readonly variant = input<ButtonVariant>('primary');
+
+  public readonly size = input<ButtonSize>('md');
 
   public readonly type = input<ButtonType>('button');
 

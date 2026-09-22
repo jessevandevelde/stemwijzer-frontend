@@ -1,6 +1,6 @@
 # Stemwijzer frontend
 
-Technische Angular-startup voor de Stemwijzer. De frontend en componentstructuur zijn bewust nog niet uitgewerkt; die volgen zodra het design bekend is.
+Angular-frontend voor de openbare StemWijzer. Bezoekers beantwoorden dertig stellingen en krijgen daarna hun partijmatches en vergelijkingsspectrum te zien.
 
 ## Starten
 
@@ -25,7 +25,7 @@ De ontwikkelserver draait op `http://127.0.0.1:4200`. De proxy stuurt verzoeken 
 
 ## Structuur
 
-Alleen de noodzakelijke Angular-shell staat klaar:
+De frontend bevat alleen de bestanden die door de huidige vragenlijst en uitslag worden gebruikt:
 
 ```text
 src/
@@ -33,7 +33,8 @@ src/
     app.component.html
     app.component.ts
     app.routes.ts
-  assets/
+    stemwijzer-page/
+    types/
   styles/
     reset.css
     variables.css
@@ -41,5 +42,3 @@ src/
   main.ts
   styles.css
 ```
-
-Featurepagina's, gedeelde componenten, services, types en state krijgen pas een vaste plek nadat het design en de gewenste schermen bekend zijn.

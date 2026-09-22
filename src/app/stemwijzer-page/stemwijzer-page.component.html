@@ -1,1 +1,165 @@
-<!-- TODO: voeg hier de semantische en toegankelijke template voor stemwijzer page toe. -->
+@if (matchingResult(); as result) {
+  <stw-results
+    (restart)="restartQuestionnaire()"
+    [answerSummary]="answerSummary()"
+    [matchingResult]="result"
+  />
+} @else {
+<header class="session-header">
+  <div class="header-content">
+    <button
+      aria-label="Ga naar de vorige stelling"
+      class="back-button"
+      type="button"
+      (click)="goBack()"
+      [disabled]="currentIndex() === 0"
+    >
+      <span aria-hidden="true" class="icon">←</span>
+    </button>
+
+    <div class="header-title">
+      <h1>Stelling Sessie</h1>
+      <span>ProDemos StemWijzer</span>
+    </div>
+  </div>
+</header>
+
+<main class="session-main">
+  <section aria-labelledby="statement-title" class="session-content">
+    <div class="progress-block">
+      <span class="progress-label">{{ progressLabel() }}</span>
+      <svg
+        aria-label="Voortgang StemWijzer"
+        class="progress-track"
+        preserveAspectRatio="none"
+        role="progressbar"
+        viewBox="0 0 100 2"
+        [attr.aria-valuemax]="totalStatements"
+        [attr.aria-valuemin]="1"
+        [attr.aria-valuenow]="currentIndex() + 1"
+      >
+        <line class="progress-background" x1="0" x2="100" y1="1" y2="1" />
+        <line class="progress-value" x1="0" y1="1" y2="1" [attr.x2]="progressEnd()" />
+      </svg>
+    </div>
+
+    @if (submittingResults()) {
+      <div aria-live="polite" class="statement-card result-loading-card">
+        <span aria-hidden="true" class="result-loading-icon">✦</span>
+        <h2>Jouw uitslag wordt berekend</h2>
+        <p>We vergelijken je antwoorden met de standpunten van de partijen.</p>
+        <span aria-hidden="true" class="loading-line"></span>
+      </div>
+    } @else if (matchingError(); as message) {
+      <div aria-live="assertive" class="statement-card error-card">
+        <span aria-hidden="true" class="icon error-icon">!</span>
+        <h2>Uitslag niet beschikbaar</h2>
+        <p>{{ message }}</p>
+        <button class="retry-button" type="button" (click)="retryMatching()">Opnieuw berekenen</button>
+      </div>
+    } @else if (loading()) {
+      <div aria-live="polite" class="statement-card loading-card">
+        <span aria-hidden="true" class="loading-line short"></span>
+        <span aria-hidden="true" class="loading-line"></span>
+        <span class="visually-hidden">Stelling laden...</span>
+      </div>
+    } @else if (errorMessage(); as message) {
+      <div aria-live="assertive" class="statement-card error-card">
+        <span aria-hidden="true" class="icon error-icon">!</span>
+        <h2>Stelling niet beschikbaar</h2>
+        <p>{{ message }}</p>
+        <button class="retry-button" type="button" (click)="retry()">Opnieuw proberen</button>
+      </div>
+    } @else if (statement(); as currentStatement) {
+      <article class="statement-card">
+        <h2 id="statement-title">{{ topicTitle() }}</h2>
+        <p class="statement-text">{{ currentStatement.text }}</p>
+
+        <div class="detail-actions">
+          <button
+            class="detail-button"
+            type="button"
+            (click)="toggleParties()"
+            [attr.aria-expanded]="partiesVisible()"
+          >
+            <span aria-hidden="true" class="icon detail-icon">◫</span>
+            <span>Wat vinden partijen?</span>
+          </button>
+          <button
+            class="detail-button"
+            type="button"
+            (click)="toggleExplanation()"
+            [attr.aria-expanded]="explanationVisible()"
+          >
+            <span aria-hidden="true" class="icon detail-icon">i</span>
+            <span>Toelichting</span>
+          </button>
+        </div>
+      </article>
+
+      @if (explanationVisible()) {
+        <aside class="information-panel">
+          <span aria-hidden="true" class="icon panel-icon">✦</span>
+          <div>
+            <h3>Over deze stelling</h3>
+            <p>Lees de stelling zorgvuldig en kies het antwoord dat het beste bij jouw mening past. Je kunt altijd teruggaan om je keuze te wijzigen.</p>
+          </div>
+        </aside>
+      }
+
+      @if (partiesVisible()) {
+        <aside class="party-panel">
+          <div class="party-row">
+            <span aria-hidden="true" class="stance-dot agree"></span>
+            <div>
+              <strong>Eens</strong>
+              <p>{{ partyNames('eens') }}</p>
+            </div>
+          </div>
+          <div class="party-row">
+            <span aria-hidden="true" class="stance-dot neutral"></span>
+            <div>
+              <strong>Geen van beide</strong>
+              <p>{{ partyNames('neutraal') }}</p>
+            </div>
+          </div>
+          <div class="party-row">
+            <span aria-hidden="true" class="stance-dot disagree"></span>
+            <div>
+              <strong>Oneens</strong>
+              <p>{{ partyNames('oneens') }}</p>
+            </div>
+          </div>
+        </aside>
+      }
+
+      <div aria-label="Kies jouw antwoord" class="answer-actions" role="group">
+        <button class="answer-button agree" type="button" (click)="recordAnswer('eens')">
+          <span aria-hidden="true" class="icon answer-icon">✓</span>
+          <span>Eens</span>
+        </button>
+        <button class="answer-button neutral" type="button" (click)="recordAnswer('neutraal')">
+          <span aria-hidden="true" class="icon answer-icon">−</span>
+          <span>Geen van beide</span>
+        </button>
+        <button class="answer-button disagree" type="button" (click)="recordAnswer('oneens')">
+          <span aria-hidden="true" class="icon answer-icon">×</span>
+          <span>Oneens</span>
+        </button>
+      </div>
+
+      <button class="skip-button" type="button" (click)="recordAnswer(null)">
+        <span>Overslaan</span>
+        <span aria-hidden="true" class="icon">→</span>
+      </button>
+    }
+  </section>
+</main>
+
+@if (feedbackMessage(); as feedback) {
+  <div aria-live="polite" class="feedback-toast" role="status">
+    <span aria-hidden="true" class="icon">✓</span>
+    {{ feedback }}
+  </div>
+}
+}

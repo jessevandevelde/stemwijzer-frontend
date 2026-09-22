@@ -1,1 +1,24 @@
-<!-- TODO: voeg hier de semantische en toegankelijke template voor statement form toe. -->
+<form class="form" (ngSubmit)="handleSubmit()" [formGroup]="form">
+  <div class="field">
+    <label class="field-label" for="statement-text">Stellingtekst</label>
+    <textarea
+      class="field-textarea"
+      formControlName="text"
+      id="statement-text"
+      placeholder="Bijvoorbeeld: Nederland moet voor 2035 minimaal twee nieuwe kerncentrales bouwen…"
+      rows="4"
+      [class.field-input-error]="isTextInvalid()"
+    ></textarea>
+    @if (isTextInvalid()) {
+      <p class="field-error">{{ textErrorMessage() }}</p>
+    }
+  </div>
+  <div class="field">
+    <label class="field-label" for="statement-category">Categorie</label>
+    <stw-dropdown ariaLabel="Categorie" id="statement-category" (valueChange)="handleCategoryChange($event)" [options]="categoryOptions()" [value]="form.controls.category.value" />
+  </div>
+  <div class="form-actions">
+    <stw-button type="button" variant="secondary" (buttonClick)="cancelled.emit()">Annuleren</stw-button>
+    <stw-button type="submit" [loading]="loading()">Stelling opslaan</stw-button>
+  </div>
+</form>

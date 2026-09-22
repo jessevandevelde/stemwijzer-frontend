@@ -1,8 +1,8 @@
-.dashboard {
+.editor-page {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
-  max-width: 72rem;
+  gap: var(--space-2);
+  max-width: 40rem;
   margin: 0 auto;
 }
 
@@ -15,8 +15,16 @@
 }
 
 .page-title {
-  margin-top: var(--space-1);
+  margin-bottom: var(--space-4);
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
+}
+
+.editor-card {
+  padding: var(--space-6);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
 }

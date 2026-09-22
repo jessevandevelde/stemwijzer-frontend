@@ -1,1 +1,5 @@
-/* TODO: voeg alleen lokale styles voor quick actions toe en gebruik de globale design-tokens. */
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--space-4);
+}

@@ -1,1 +1,7 @@
-/* TODO: voeg alleen lokale styles voor party form toe en gebruik de globale design-tokens. */
+@import url("../../../../../../styles/auth-form.css");
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}

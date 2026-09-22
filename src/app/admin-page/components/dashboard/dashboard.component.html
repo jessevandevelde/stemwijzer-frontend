@@ -1,1 +1,44 @@
-<!-- TODO: voeg hier de semantische en toegankelijke template voor dashboard toe. -->
+<div class="dashboard">
+  <p class="breadcrumb">Electorale productieomgeving · Editie #TK2025-V3</p>
+  <h1 class="page-title">Super Admin Dashboard — Tweede Kamerverkiezingen 2025</h1>
+
+  <stw-quick-actions (createParty)="navigateToNewParty()" (createStatement)="navigateToNewStatement()" [metrics]="metrics()" />
+
+  <stw-statements-table
+    (addRequested)="navigateToNewStatement()"
+    (categoryChange)="handleStatementCategoryChange($event)"
+    (deleteRequested)="requestStatementDeletion($event)"
+    (editRequested)="navigateToEditStatement($event)"
+    (pageChange)="handleStatementPageChange($event)"
+    (searchChange)="handleStatementSearchChange($event)"
+    [category]="statementFilters().category"
+    [categoryOptions]="categoryOptions"
+    [page]="statementPage()"
+    [pageSize]="statementsResult().pageSize"
+    [search]="statementFilters().search"
+    [statements]="statementsResult().items"
+    [total]="statementsResult().total"
+  />
+
+  <stw-parties-table
+    (addRequested)="navigateToNewParty()"
+    (deleteRequested)="requestPartyDeletion($event)"
+    (editRequested)="navigateToEditParty($event)"
+    (pageChange)="handlePartyPageChange($event)"
+    (searchChange)="handlePartySearchChange($event)"
+    [page]="partyPage()"
+    [pageSize]="partiesResult().pageSize"
+    [parties]="partiesResult().items"
+    [search]="partyFilters().search"
+    [total]="partiesResult().total"
+  />
+</div>
+
+@if (pendingDeletion(); as pending) {
+  <stw-confirmation-dialog
+    title="Verwijderen bevestigen"
+    (cancelled)="cancelDeletion()"
+    (confirmed)="confirmDeletion()"
+    [message]="`Weet je zeker dat je ${pending.label} permanent wilt verwijderen? Dit kan niet ongedaan worden gemaakt.`"
+  />
+}
