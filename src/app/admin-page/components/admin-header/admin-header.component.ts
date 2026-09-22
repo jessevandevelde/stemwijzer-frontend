@@ -1,9 +1,10 @@
+import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { UserAvatarComponent } from '../../../components/user-avatar/user-avatar.component';
 
 @Component({
   selector: 'stw-admin-header',
-  imports: [UserAvatarComponent],
+  imports: [NgOptimizedImage, UserAvatarComponent],
   templateUrl: './admin-header.component.html',
   styleUrl: './admin-header.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
