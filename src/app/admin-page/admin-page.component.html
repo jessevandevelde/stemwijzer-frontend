@@ -1,1 +1,200 @@
-<!-- TODO: voeg hier de semantische en toegankelijke template voor admin page toe. -->
+<div class="admin-layout">
+
+  <!-- Zijbalk -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">✓</div>
+
+      <div>
+        <h2>Examens</h2>
+        <p>Beheeromgeving</p>
+      </div>
+    </div>
+
+    <nav>
+      <a class="nav-item active">
+        <span>▦</span>
+        Dashboard
+      </a>
+
+      <a class="nav-item">
+        <span>▤</span>
+        Examens
+      </a>
+
+      <a class="nav-item">
+        <span>♙</span>
+        Studenten
+      </a>
+
+      <a class="nav-item">
+        <span>⚙</span>
+        Instellingen
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Rechterkant -->
+  <main class="main-content">
+
+    <!-- Bovenste balk -->
+    <header class="topbar">
+      <input
+        class="search-input"
+        type="text"
+        placeholder="Zoek examens, studenten of resultaten..."
+      >
+
+      <div class="topbar-actions">
+        <button class="help-button">Hulp</button>
+
+        <div class="user">
+          <div class="avatar">A</div>
+
+          <div>
+            <strong>Admin</strong>
+            <p>Beheerder</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="page-content">
+      <div class="page-heading">
+        <div>
+          <p class="breadcrumb">Dashboard / Examenoverzicht</p>
+          <h1>Super Admin Dashboard — Tweede Examenmomenten 2025</h1>
+        </div>
+      </div>
+
+      <!-- Statistieken -->
+      <section class="statistics">
+        <article class="stat-card">
+          <div>
+            <span class="stat-number">30</span>
+            <span class="stat-label">Studenten</span>
+          </div>
+
+          <button (click)="studentToevoegen()">
+            + Student toevoegen
+          </button>
+        </article>
+
+        <article class="stat-card">
+          <div>
+            <span class="stat-number">18</span>
+            <span class="stat-label">Examens</span>
+          </div>
+
+          <button (click)="examenToevoegen()">
+            + Examen toevoegen
+          </button>
+        </article>
+      </section>
+
+      <!-- Aankomende examens -->
+      <section class="panel">
+        <div class="panel-heading">
+          <div>
+            <h2>Aankomende examens</h2>
+            <p>Een overzicht van de geplande examens.</p>
+          </div>
+
+          <button class="primary-button" (click)="examenToevoegen()">
+            + Nieuw examen
+          </button>
+        </div>
+
+        <div
+          class="exam-row"
+          *ngFor="let examen of examens"
+        >
+          <div class="date-box">
+            <strong>18</strong>
+            <span>SEP</span>
+          </div>
+
+          <div class="exam-information">
+            <h3>{{ examen.naam }}</h3>
+            <p>{{ examen.beschrijving }}</p>
+          </div>
+
+          <span class="badge">
+            {{ examen.status }}
+          </span>
+
+          <button
+            class="outline-button"
+            (click)="bewerken(examen.naam)"
+          >
+            Bewerken
+          </button>
+        </div>
+      </section>
+
+      <!-- Studententabel -->
+      <section class="panel">
+        <div class="panel-heading">
+          <div>
+            <h2>Ingeschreven studenten</h2>
+            <p>Studenten die deelnemen aan de examens.</p>
+          </div>
+
+          <button class="primary-button" (click)="studentToevoegen()">
+            + Student toevoegen
+          </button>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Klas</th>
+                <th>Resultaat</th>
+                <th>Status</th>
+                <th>Actie</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let kandidaat of kandidaten">
+                <td>
+                  <div class="student">
+                    <div class="student-avatar">
+                      {{ kandidaat.initialen }}
+                    </div>
+
+                    <strong>{{ kandidaat.naam }}</strong>
+                  </div>
+                </td>
+
+                <td>{{ kandidaat.klas }}</td>
+
+                <td>{{ kandidaat.resultaat }}</td>
+
+                <td>
+                  <span
+                    class="status"
+                    [class.planned]="kandidaat.status === 'Ingepland'"
+                  >
+                    {{ kandidaat.status }}
+                  </span>
+                </td>
+
+                <td>
+                  <button
+                    class="outline-button"
+                    (click)="bewerken(kandidaat.naam)"
+                  >
+                    Bewerken
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+  </main>
+</div>

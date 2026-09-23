@@ -1,17 +1,14 @@
-import type { Routes } from '@angular/router';
+import { Routes } from '@angular/router';
+import { AdminPageComponent } from './admin-page/admin-page.component';
 
 export const routes: Routes = [
   {
+    path: 'admin',
+    component: AdminPageComponent
+  },
+  {
     path: '',
-    pathMatch: 'full',
-    redirectTo: 'login',
-  },
-  {
-    path: 'login',
-    loadChildren: async () => import('./login-page/login-page.routes').then(module => module.routes),
-  },
-  {
-    path: '**',
-    redirectTo: 'login',
-  },
+    redirectTo: 'admin',
+    pathMatch: 'full'
+  }
 ];
