@@ -1,0 +1,137 @@
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo">StemWijzer <small>CMS BEHEER</small></div>
+    <p class="admin-label">PRODEMOS ADMIN</p>
+
+    <nav>
+      <a href="/admin">Overzicht</a>
+      <a class="active" href="/admin/stelling-beheren">☑ Stellingen</a>
+      <a href="#">Partijen</a>
+      <a href="#">Instellingen</a>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <header class="topbar">
+      <span>StemWijzer</span>
+      <strong>Super Admin</strong>
+    </header>
+
+    <div class="page">
+      <p class="breadcrumb">Stellingen › Hypotheekrenteaftrek bewerken</p>
+
+      <div class="heading">
+        <h1>Stelling Beheren <span class="status">● Actief</span></h1>
+
+        <div class="actions">
+          <button type="button" (click)="annuleren()">Annuleren</button>
+          <button type="button" class="delete" (click)="verwijderen()">
+            Verwijder stelling
+          </button>
+          <button type="button" class="save" (click)="opslaan()">
+            Stelling opslaan
+          </button>
+        </div>
+      </div>
+
+      <p class="melding" *ngIf="melding" role="status">{{ melding }}</p>
+
+      <section class="card">
+        <h2>Basisgegevens</h2>
+
+        <div class="fields">
+          <label>
+            Thema / Korte titel
+            <input [(ngModel)]="stelling.titel" name="titel" />
+          </label>
+
+          <label>
+            Categorie
+            <select [(ngModel)]="stelling.categorie" name="categorie">
+              <option>Wonen & Huisvesting</option>
+              <option>Economie</option>
+              <option>Onderwijs</option>
+              <option>Zorg</option>
+              <option>Klimaat</option>
+            </select>
+          </label>
+        </div>
+
+        <label>
+          Stellingtekst
+          <textarea
+            [(ngModel)]="stelling.tekst"
+            name="tekst"
+            rows="2"
+          ></textarea>
+        </label>
+
+        <label>
+          Toelichting voor kiezer ('Meer weten')
+          <textarea
+            [(ngModel)]="stelling.toelichting"
+            name="toelichting"
+            rows="3"
+          ></textarea>
+        </label>
+      </section>
+
+      <section class="card">
+        <h2>Politiek spectrum</h2>
+
+        <div class="spectrum">
+          <div>
+            <p>Economisch</p>
+            <div class="choices">
+              <button
+                type="button"
+                *ngFor="let keuze of ['Links', 'Midden', 'Rechts']"
+                [class.selected]="stelling.economisch === keuze"
+                (click)="stelling.economisch = keuze"
+              >
+                {{ keuze }}
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <p>Maatschappelijk</p>
+            <div class="choices">
+              <button
+                type="button"
+                *ngFor="let keuze of ['Progressief', 'Midden', 'Conservatief']"
+                [class.selected]="stelling.maatschappelijk === keuze"
+                (click)="stelling.maatschappelijk = keuze"
+              >
+                {{ keuze }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Partijstandpunten</h2>
+
+        <div
+          class="party"
+          *ngFor="let partij of stelling.partijen; let i = index"
+        >
+          <strong>{{ partij.naam }}</strong>
+
+          <select [(ngModel)]="partij.keuze" [name]="'keuze-' + i">
+            <option>Eens</option>
+            <option>Geen</option>
+            <option>Oneens</option>
+          </select>
+
+          <input
+            [(ngModel)]="partij.toelichting"
+            [name]="'toelichting-' + i"
+            [attr.aria-label]="'Toelichting van ' + partij.naam"
+          />
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
