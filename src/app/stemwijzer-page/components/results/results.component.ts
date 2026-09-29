@@ -1,5 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import type { AnswerSummary, MatchingResult, PartyMatch } from '../../../types/matching.interface';
+import type { Party } from '../../../types/party.interface';
+import { StemwijzerPageService } from '../../stemwijzer-page.service';
+import { PartyDetailComponent } from '../party-detail/party-detail.component';
 
 interface SpectrumPoint {
   readonly id: number
@@ -29,6 +32,7 @@ function clamp(value: number, minimum: number, maximum: number): number {
 
 @Component({
   selector: 'stw-results',
+  imports: [PartyDetailComponent],
   templateUrl: './results.component.html',
   styleUrl: './results.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -63,6 +67,42 @@ export class ResultsComponent {
       y: clamp(SPECTRUM_CENTER - (neutralShare - NEUTRAL_BASELINE) * USER_RANGE, SPECTRUM_MIN, SPECTRUM_MAX),
     };
   });
+
+  protected readonly selectedParty = signal<Party | null>(null);
+
+  protected readonly partyLoading = signal(false);
+
+  protected readonly partyError = signal<string | null>(null);
+
+  protected readonly partyDetailHint = computed(() => {
+    if (this.partyLoading()) {
+      return 'Partij-informatie laden...';
+    }
+
+    return this.partyError() ?? 'Tik op de kaart voor meer over deze partij ›';
+  });
+
+  private readonly service = inject(StemwijzerPageService);
+
+  protected openPartyDetail(partyId: number): void {
+    this.partyLoading.set(true);
+    this.partyError.set(null);
+
+    this.service.getParty(partyId).subscribe({
+      next: (party) => {
+        this.partyLoading.set(false);
+        this.selectedParty.set(party);
+      },
+      error: () => {
+        this.partyLoading.set(false);
+        this.partyError.set('De partij-informatie kon niet worden geladen. Probeer het opnieuw.');
+      },
+    });
+  }
+
+  protected closePartyDetail(): void {
+    this.selectedParty.set(null);
+  }
 
   protected percentage(match: PartyMatch): number {
     return Math.round(match.matchPercentage ?? 0);

@@ -25,8 +25,18 @@
           <span class="best-match-badge"><span aria-hidden="true">★</span> Beste match</span>
           <strong class="best-match-score">{{ percentage(winner) }}%</strong>
         </div>
-        <h1 id="best-match-heading">{{ winner.partyName }}</h1>
+        <h1 id="best-match-heading">
+          <button
+            class="best-match-link"
+            type="button"
+            (click)="openPartyDetail(winner.partyId)"
+            [disabled]="partyLoading()"
+          >
+            {{ winner.partyName }}
+          </button>
+        </h1>
         <p>{{ winner.matchedAnswers }} van {{ winner.comparedAnswers }} antwoorden komen overeen</p>
+        <p aria-live="polite" class="party-detail-hint" [class.party-detail-error]="partyError()">{{ partyDetailHint() }}</p>
         <svg aria-hidden="true" class="match-bar" preserveAspectRatio="none" viewBox="0 0 100 3">
           <line class="match-bar-background" x1="0" x2="100" y1="1.5" y2="1.5" />
           <line class="match-bar-value" x1="0" y1="1.5" y2="1.5" [attr.x2]="percentage(winner)" />
@@ -107,3 +117,7 @@
     </button>
   </div>
 </main>
+
+@if (selectedParty(); as party) {
+  <stw-party-detail (closed)="closePartyDetail()" [party]="party" />
+}

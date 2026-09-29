@@ -166,6 +166,47 @@ button {
   z-index: 1;
 }
 
+.best-match-card > h1 {
+  position: static;
+}
+
+.best-match-link {
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.best-match-link::before {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  content: "";
+}
+
+.best-match-link:disabled {
+  cursor: progress;
+}
+
+.best-match-card:hover,
+.best-match-card:focus-within {
+  border-color: var(--color-primary);
+}
+
+.party-detail-hint {
+  margin-top: 0.75rem;
+  color: var(--color-primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.party-detail-error {
+  color: var(--color-danger);
+}
+
 .best-match-topline {
   display: flex;
   align-items: flex-start;
