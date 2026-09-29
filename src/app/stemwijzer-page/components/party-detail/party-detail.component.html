@@ -1,0 +1,22 @@
+<div class="overlay">
+  <button aria-label="Sluiten" class="backdrop" type="button" (click)="closed.emit()"></button>
+  <section aria-labelledby="party-detail-name" aria-modal="true" class="dialog" role="dialog">
+    <button aria-label="Sluiten" class="close-button" type="button" (click)="closed.emit()">×</button>
+
+    @if (party().imageUrl && !logoFailed()) {
+      <img
+        class="logo"
+        height="80"
+        width="80"
+        (error)="onLogoError()"
+        [alt]="`Logo van ${party().name}`"
+        [ngSrc]="party().imageUrl!"
+      />
+    } @else {
+      <div aria-hidden="true" class="logo logo-fallback">{{ initials() }}</div>
+    }
+
+    <h2 class="name" id="party-detail-name">{{ party().name }}</h2>
+    <p class="description">{{ party().description ?? 'Deze partij heeft nog geen beschrijving.' }}</p>
+  </section>
+</div>
