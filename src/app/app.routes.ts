@@ -18,6 +18,10 @@ export const routes: Routes = [
     loadChildren: async () => import('./admin-page/admin-page.routes').then(module => module.routes),
   },
   {
+    path: 'stemwijzer',
+    loadComponent: async () => import('./stemwijzer-page/stemwijzer-page.component').then(module => module.StemwijzerPageComponent),
+  },
+  {
     path: '**',
     redirectTo: 'login',
   },
