@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import type { Observable } from 'rxjs';
 import type { AnswerSubmission, MatchingResult } from '../types/matching.interface';
-import type { Statement } from '../types/statement.interface';
+import type { PublicStatement } from '../types/statement.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -10,10 +10,10 @@ import type { Statement } from '../types/statement.interface';
 export class StemwijzerPageService {
   private readonly http = inject(HttpClient);
 
-  public getStatement(index: number): Observable<Statement> {
+  public getStatement(index: number): Observable<PublicStatement> {
     const params = new HttpParams().set('index', index.toString());
 
-    return this.http.get<Statement>('/statements', { params });
+    return this.http.get<PublicStatement>('/statements', { params });
   }
 
   public getMatchingResults(answers: readonly AnswerSubmission[]): Observable<MatchingResult> {

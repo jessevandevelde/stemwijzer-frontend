@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import type { OnInit } from '@angular/core';
 import type { Answer } from '../types/answer.interface';
 import type { AnswerSummary, MatchingResult } from '../types/matching.interface';
-import type { Statement } from '../types/statement.interface';
+import type { PublicStatement } from '../types/statement.interface';
 import { ResultsComponent } from './components/results/results.component';
 import { StemwijzerPageService } from './stemwijzer-page.service';
 
@@ -31,7 +31,7 @@ const TOPICS: readonly { readonly keywords: readonly string[], readonly label: s
 export class StemwijzerPageComponent implements OnInit {
   protected readonly currentIndex = signal(0);
 
-  protected readonly statement = signal<Statement | null>(null);
+  protected readonly statement = signal<PublicStatement | null>(null);
 
   protected readonly loading = signal(true);
 
