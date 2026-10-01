@@ -1,6 +1,15 @@
-<div class="editor-page">
-  <p class="breadcrumb">Electorale productieomgeving · Partijen</p>
-  <h1 class="page-title">{{ partyId === null ? 'Nieuwe partij' : 'Partij bewerken' }}</h1>
+<div class="party-page">
+  <header class="page-header">
+    <nav aria-label="Kruimelpad" class="breadcrumb-trail">
+      <a fragment="partijen-panel" routerLink="/admin">Partijen</a>
+      <span aria-hidden="true">›</span>
+      <span class="breadcrumb-current">{{ pageLabel() }}</span>
+    </nav>
+    <h1 class="page-title">
+      <span class="status-dot" [class.status-dot-inactive]="initialValue()?.isActive === false"></span>
+      Partij beheren
+    </h1>
+  </header>
 
   @if (notFound()) {
     <stw-security-notice variant="error">Deze partij kon niet worden gevonden.</stw-security-notice>
@@ -8,13 +17,29 @@
     @if (errorMessage(); as message) {
       <stw-security-notice variant="error">{{ message }}</stw-security-notice>
     }
-    <div class="editor-card">
-      <stw-party-form
-        (cancelled)="handleCancel()"
-        (submitForm)="handleSubmit($event)"
-        [initialValue]="initialValue()"
-        [loading]="saving()"
-      />
+
+    <div class="party-grid">
+      <div class="party-column">
+        <section class="panel">
+          <h2 class="panel-title">Partijgegevens</h2>
+          <stw-party-form
+            (cancelled)="handleCancel()"
+            (submitForm)="handleSubmit($event)"
+            [initialValue]="initialValue()"
+            [loading]="saving()"
+          />
+        </section>
+
+        <section class="panel">
+          <h2 class="panel-title">Ideologische plaatsing</h2>
+          <p class="panel-placeholder">Volgt in een volgende stap.</p>
+        </section>
+      </div>
+
+      <section class="panel">
+        <h2 class="panel-title">Standpunten op stellingen</h2>
+        <p class="panel-placeholder">Volgt in een volgende stap.</p>
+      </section>
     </div>
   }
 </div>

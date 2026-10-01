@@ -1,6 +1,6 @@
 import type { OnInit } from '@angular/core';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SecurityNoticeComponent } from '../../../components/security-notice/security-notice.component';
 import type { PartyFormValue } from '../../admin-page.interfaces';
 import { AdminPageService } from '../../admin-page.service';
@@ -9,7 +9,7 @@ import { PartyFormComponent } from './components/party-form/party-form.component
 
 @Component({
   selector: 'stw-party-editor',
-  imports: [PartyFormComponent, SecurityNoticeComponent],
+  imports: [PartyFormComponent, RouterLink, SecurityNoticeComponent],
   templateUrl: './party-editor.component.html',
   styleUrl: './party-editor.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,6 +24,16 @@ export class PartyEditorComponent implements OnInit {
   protected readonly errorMessage = signal<string | null>(null);
 
   protected readonly partyId: number | null;
+
+  protected readonly pageLabel = computed(() => {
+    const party = this.initialValue();
+
+    if (this.partyId === null) {
+      return 'Nieuwe partij';
+    }
+
+    return party === null ? 'Partij bewerken' : `${party.name} bewerken`;
+  });
 
   private readonly adminPageService = inject(AdminPageService);
 
