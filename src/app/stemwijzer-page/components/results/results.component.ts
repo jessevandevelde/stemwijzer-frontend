@@ -12,22 +12,20 @@ interface SpectrumPoint {
   readonly y: number
 }
 
-const PERCENT_MAX = 100;
 const SPECTRUM_MIN = 12;
 const SPECTRUM_MAX = 88;
-const SPECTRUM_RANGE = SPECTRUM_MAX - SPECTRUM_MIN;
-const SPECTRUM_Y_BASE = 18;
-const SPECTRUM_Y_RANGE = 64;
-const SPECTRUM_SEED_MULTIPLIER = 29;
-const SPECTRUM_INDEX_MULTIPLIER = 17;
-const USER_RANGE = 34;
-const NEUTRAL_BASELINE = 0.33;
-const SPECTRUM_CENTER = 50;
+const HALF = 2;
+const SPECTRUM_CENTER = (SPECTRUM_MIN + SPECTRUM_MAX) / HALF;
+const SPECTRUM_HALF_RANGE = (SPECTRUM_MAX - SPECTRUM_MIN) / HALF;
 const MIN_ABBREVIATION_WORD_LENGTH = 2;
 const MAX_ABBREVIATION_WORDS = 3;
 
 function clamp(value: number, minimum: number, maximum: number): number {
   return Math.min(Math.max(value, minimum), maximum);
+}
+
+function toSpectrumCoordinate(position: number): number {
+  return clamp(SPECTRUM_CENTER + position * SPECTRUM_HALF_RANGE, SPECTRUM_MIN, SPECTRUM_MAX);
 }
 
 @Component({
@@ -48,23 +46,20 @@ export class ResultsComponent {
 
   protected readonly otherMatches = computed(() => this.matchingResult().matches.slice(1));
 
-  protected readonly spectrumPoints = computed<readonly SpectrumPoint[]>(() => this.matchingResult().matches.map((match, index) => ({
+  protected readonly spectrumPoints = computed<readonly SpectrumPoint[]>(() => this.matchingResult().matches.map(match => ({
     id: match.partyId,
     label: this.abbreviation(match.partyName),
     name: match.partyName,
-    x: SPECTRUM_MIN + this.percentage(match) / PERCENT_MAX * SPECTRUM_RANGE,
-    y: SPECTRUM_Y_BASE + (match.partyId * SPECTRUM_SEED_MULTIPLIER + index * SPECTRUM_INDEX_MULTIPLIER) % SPECTRUM_Y_RANGE,
+    x: toSpectrumCoordinate(match.economicPosition),
+    y: toSpectrumCoordinate(match.culturalPosition),
   })));
 
   protected readonly userPoint = computed(() => {
-    const summary = this.answerSummary();
-    const answered = Math.max(summary.total - summary.skipped, 1);
-    const opinionBalance = (summary.agree - summary.disagree) / answered;
-    const neutralShare = summary.neutral / answered;
+    const position = this.matchingResult().userPosition;
 
     return {
-      x: clamp(SPECTRUM_CENTER + opinionBalance * USER_RANGE, SPECTRUM_MIN, SPECTRUM_MAX),
-      y: clamp(SPECTRUM_CENTER - (neutralShare - NEUTRAL_BASELINE) * USER_RANGE, SPECTRUM_MIN, SPECTRUM_MAX),
+      x: toSpectrumCoordinate(position.economicPosition),
+      y: toSpectrumCoordinate(position.culturalPosition),
     };
   });
 
