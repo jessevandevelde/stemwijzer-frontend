@@ -1,6 +1,8 @@
 import type { OnInit } from '@angular/core';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ButtonComponent } from '../../../components/button/button.component';
+import { ConfirmationDialogComponent } from '../../../components/confirmation-dialog/confirmation-dialog.component';
 import { SecurityNoticeComponent } from '../../../components/security-notice/security-notice.component';
 import type { PartyFormValue } from '../../admin-page.interfaces';
 import { AdminPageService } from '../../admin-page.service';
@@ -9,7 +11,7 @@ import { PartyFormComponent } from './components/party-form/party-form.component
 
 @Component({
   selector: 'stw-party-editor',
-  imports: [PartyFormComponent, RouterLink, SecurityNoticeComponent],
+  imports: [ButtonComponent, ConfirmationDialogComponent, PartyFormComponent, RouterLink, SecurityNoticeComponent],
   templateUrl: './party-editor.component.html',
   styleUrl: './party-editor.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,6 +22,10 @@ export class PartyEditorComponent implements OnInit {
   protected readonly saving = signal(false);
 
   protected readonly notFound = signal(false);
+
+  protected readonly showDeleteDialog = signal(false);
+
+  protected readonly deleting = signal(false);
 
   protected readonly errorMessage = signal<string | null>(null);
 
@@ -63,6 +69,10 @@ export class PartyEditorComponent implements OnInit {
         name: party.name,
         description: party.description,
         imageUrl: party.imageUrl,
+        abbreviation: party.abbreviation,
+        color: party.color,
+        seats: party.seats,
+        leader: party.leader,
         isActive: party.isActive,
       });
     });
@@ -79,7 +89,7 @@ export class PartyEditorComponent implements OnInit {
     save$.subscribe({
       next: () => {
         this.saving.set(false);
-        void this.router.navigate(['/admin'], { fragment: 'partijen-panel' });
+        this.goToPartyList();
       },
       error: (error: unknown) => {
         this.saving.set(false);
@@ -89,6 +99,39 @@ export class PartyEditorComponent implements OnInit {
   }
 
   protected handleCancel(): void {
+    this.goToPartyList();
+  }
+
+  protected requestDeletion(): void {
+    this.showDeleteDialog.set(true);
+  }
+
+  protected cancelDeletion(): void {
+    this.showDeleteDialog.set(false);
+  }
+
+  protected confirmDeletion(): void {
+    if (this.partyId === null) {
+      return;
+    }
+
+    this.showDeleteDialog.set(false);
+    this.deleting.set(true);
+    this.errorMessage.set(null);
+
+    this.adminPageService.deleteParty(this.partyId).subscribe({
+      next: () => {
+        this.deleting.set(false);
+        this.goToPartyList();
+      },
+      error: (error: unknown) => {
+        this.deleting.set(false);
+        this.errorMessage.set(extractErrorMessage(error));
+      },
+    });
+  }
+
+  private goToPartyList(): void {
     void this.router.navigate(['/admin'], { fragment: 'partijen-panel' });
   }
 }

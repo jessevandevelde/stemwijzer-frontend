@@ -23,6 +23,8 @@ export class ButtonComponent {
 
   public readonly fullWidth = input(false);
 
+  public readonly formId = input<string | null>(null);
+
   public readonly buttonClick = output();
 
   protected handleClick(): void {
