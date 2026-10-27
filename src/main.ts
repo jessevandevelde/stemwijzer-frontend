@@ -12,7 +12,7 @@ import { httpErrorInterceptor } from './app/interceptors/http-error.interceptor'
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideRouter(routes, withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' })),
+    provideRouter(routes, withInMemoryScrolling({ anchorScrolling: 'enabled' })),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor, httpErrorInterceptor])),
     provideStore(),
     provideEffects(),

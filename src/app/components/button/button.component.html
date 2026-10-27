@@ -1,6 +1,7 @@
 <button
   class="button"
   (click)="handleClick()"
+  [attr.form]="formId()"
   [class.button-danger]="variant() === 'danger'"
   [class.button-full-width]="fullWidth()"
   [class.button-loading]="loading()"
