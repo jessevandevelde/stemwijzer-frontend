@@ -7,11 +7,12 @@ import { SecurityNoticeComponent } from '../../../components/security-notice/sec
 import type { PartyFormValue } from '../../admin-page.interfaces';
 import { AdminPageService } from '../../admin-page.service';
 import { extractErrorMessage } from '../../extract-error-message';
+import { PartyAnswersComponent } from './components/party-answers/party-answers.component';
 import { PartyFormComponent } from './components/party-form/party-form.component';
 
 @Component({
   selector: 'stw-party-editor',
-  imports: [ButtonComponent, ConfirmationDialogComponent, PartyFormComponent, RouterLink, SecurityNoticeComponent],
+  imports: [ButtonComponent, ConfirmationDialogComponent, PartyAnswersComponent, PartyFormComponent, RouterLink, SecurityNoticeComponent],
   templateUrl: './party-editor.component.html',
   styleUrl: './party-editor.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

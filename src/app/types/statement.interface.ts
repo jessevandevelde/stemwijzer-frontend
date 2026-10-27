@@ -20,3 +20,10 @@ export interface PublicStatement {
   readonly text: string
   readonly partyAnswers: readonly PartyAnswer[]
 }
+
+export interface PartyStatementAnswer {
+  readonly statementId: number
+  readonly statementText: string
+  readonly statementIsActive: boolean
+  readonly answer: Answer | null
+}
