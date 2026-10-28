@@ -18,5 +18,9 @@ export interface PartyFormValue {
   readonly name: string
   readonly description: string | null
   readonly imageUrl: string | null
+  readonly abbreviation: string | null
+  readonly color: string | null
+  readonly seats: number | null
+  readonly leader: string | null
   readonly isActive: boolean
 }

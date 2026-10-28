@@ -6,7 +6,6 @@ import type { PublicStatement } from '../types/statement.interface';
 import { ResultsComponent } from './components/results/results.component';
 import { StemwijzerPageService } from './stemwijzer-page.service';
 
-const TOTAL_STATEMENTS = 30;
 const FEEDBACK_DURATION_MS = 1800;
 const PROGRESS_MAX = 100;
 
@@ -49,11 +48,11 @@ export class StemwijzerPageComponent implements OnInit {
 
   protected readonly matchingResult = signal<MatchingResult | null>(null);
 
-  protected readonly totalStatements = TOTAL_STATEMENTS;
+  protected readonly totalStatements = signal(1);
 
-  protected readonly progressLabel = computed(() => `${this.currentIndex() + 1} van ${TOTAL_STATEMENTS}`);
+  protected readonly progressLabel = computed(() => `${this.currentIndex() + 1} van ${this.totalStatements()}`);
 
-  protected readonly progressEnd = computed(() => ((this.currentIndex() + 1) / TOTAL_STATEMENTS) * PROGRESS_MAX);
+  protected readonly progressEnd = computed(() => ((this.currentIndex() + 1) / this.totalStatements()) * PROGRESS_MAX);
 
   protected readonly topicTitle = computed(() => {
     const statementText = this.statement()?.text.toLowerCase() ?? '';
@@ -73,7 +72,7 @@ export class StemwijzerPageComponent implements OnInit {
       neutral: values.filter(answer => answer === 'neutraal').length - skipped,
       disagree: values.filter(answer => answer === 'oneens').length,
       skipped,
-      total: TOTAL_STATEMENTS,
+      total: this.totalStatements(),
     };
   });
 
@@ -86,6 +85,13 @@ export class StemwijzerPageComponent implements OnInit {
   private readonly answerRevision = signal(0);
 
   public ngOnInit(): void {
+    this.service.getAllStatements().subscribe({
+      next: (statements) => {
+        const activeCount = statements.filter(statement => statement.isActive).length;
+
+        this.totalStatements.set(Math.max(activeCount, 1));
+      },
+    });
     this.loadStatement(0);
   }
 
@@ -119,7 +125,7 @@ export class StemwijzerPageComponent implements OnInit {
 
     const nextIndex = this.currentIndex() + 1;
 
-    if (nextIndex < TOTAL_STATEMENTS) {
+    if (nextIndex < this.totalStatements()) {
       this.loadStatement(nextIndex);
 
       return;

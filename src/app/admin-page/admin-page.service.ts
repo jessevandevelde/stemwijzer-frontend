@@ -4,7 +4,8 @@ import { catchError, forkJoin, map, of } from 'rxjs';
 import { ApiService } from '../services/api.service';
 import type { DashboardMetrics, PaginatedResult } from '../types/admin.interface';
 import type { Party } from '../types/party.interface';
-import type { Statement } from '../types/statement.interface';
+import type { Answer } from '../types/answer.interface';
+import type { PartyStatementAnswer, Statement } from '../types/statement.interface';
 import type { PartyFormValue, PartyListFilters, StatementFormValue, StatementListFilters, StatusFilter } from './admin-page.interfaces';
 
 function normalize(value: string): string {
@@ -106,6 +107,14 @@ export class AdminPageService {
 
   public deleteParty(id: number): Observable<unknown> {
     return this.api.delete<unknown>(`/parties/${id}`);
+  }
+
+  public getPartyAnswers(partyId: number): Observable<PartyStatementAnswer[]> {
+    return this.api.get<PartyStatementAnswer[]>(`/parties/${partyId}/answers`);
+  }
+
+  public setPartyAnswer(partyId: number, statementId: number, answer: Answer | null): Observable<PartyStatementAnswer> {
+    return this.api.put<PartyStatementAnswer>(`/parties/${partyId}/answers/${statementId}`, { answer });
   }
 
   private fetchStatements(): Observable<Statement[]> {

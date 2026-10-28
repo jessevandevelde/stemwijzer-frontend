@@ -12,11 +12,19 @@ export interface PartyMatch {
   readonly matchedAnswers: number
   readonly comparedAnswers: number
   readonly missingAnswers: number
+  readonly economicPosition: number
+  readonly culturalPosition: number
+}
+
+export interface SpectrumPosition {
+  readonly economicPosition: number
+  readonly culturalPosition: number
 }
 
 export interface MatchingResult {
   readonly totalAnswers: number
   readonly matches: readonly PartyMatch[]
+  readonly userPosition: SpectrumPosition
 }
 
 export interface AnswerSummary {

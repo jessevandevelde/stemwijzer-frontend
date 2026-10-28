@@ -5,6 +5,7 @@ export interface AuthSession {
   readonly userId: number
   readonly name: string
   readonly email: string
+  readonly partyName?: string
 }
 
 const AUTH_STORAGE_KEY = 'stw-auth-session';
@@ -39,6 +40,21 @@ export class AuthService {
     const storage = rememberMe ? localStorage : sessionStorage;
 
     storage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
+  }
+
+  // Houdt de getoonde partijnaam gelijk nadat een partijbeheerder de naam van zijn partij heeft gewijzigd.
+  public updatePartyName(partyName: string): void {
+    if (this.session === null) {
+      return;
+    }
+
+    this.session = { ...this.session, partyName };
+
+    for (const storage of [localStorage, sessionStorage]) {
+      if (storage.getItem(AUTH_STORAGE_KEY) !== null) {
+        storage.setItem(AUTH_STORAGE_KEY, JSON.stringify(this.session));
+      }
+    }
   }
 
   public endSession(): void {

@@ -71,17 +71,17 @@
 
       <section aria-labelledby="spectrum-heading" class="spectrum-card">
         <div class="spectrum-copy">
-          <span class="spectrum-eyebrow"><span aria-hidden="true">◇</span> Politiek spectrum</span>
-          <h2 id="spectrum-heading">Jouw vergelijkingsspectrum</h2>
-          <p>Een indicatieve spreiding van jouw partijmatches op basis van de beantwoorde stellingen.</p>
+          <span class="spectrum-eyebrow"><span aria-hidden="true">◇</span> Cultuur- en economisch spectrum</span>
+          <h2 id="spectrum-heading">Jouw ideologische plaatsing</h2>
+          <p>Jouw positie en die van de partijen, berekend uit de antwoorden op de stellingen: links-rechts op de economische as, progressief-conservatief op de culturele as.</p>
         </div>
 
         <div class="spectrum-frame">
-          <span class="axis-label axis-top">Vergelijkbaar antwoordpatroon</span>
-          <span class="axis-label axis-left">Minder overeenkomst</span>
-          <span class="axis-label axis-right">Meer overeenkomst</span>
-          <span class="axis-label axis-bottom">Ander antwoordpatroon</span>
-          <svg aria-label="Spectrum met jouw positie en de partijmatches" class="spectrum-plot" role="img" viewBox="0 0 100 100">
+          <span class="axis-label axis-top">Progressief</span>
+          <span class="axis-label axis-left">Links</span>
+          <span class="axis-label axis-right">Rechts</span>
+          <span class="axis-label axis-bottom">Conservatief</span>
+          <svg aria-label="Spectrum met de links-rechts-as en de progressief-conservatief-as, met jouw positie en de partijmatches" class="spectrum-plot" role="img" viewBox="0 0 100 100">
             <line class="spectrum-axis" x1="8" x2="92" y1="50" y2="50" />
             <line class="spectrum-axis" x1="50" x2="50" y1="8" y2="92" />
             @for (point of spectrumPoints(); track point.id) {
@@ -101,7 +101,7 @@
 
         <div class="spectrum-explanation">
           <span aria-hidden="true">✦</span>
-          <p><strong>Zo lees je het spectrum:</strong> partijen die dichter bij “Jij” staan, hebben een vergelijkbaarder antwoordpatroon. Het matchpercentage blijft leidend.</p>
+          <p><strong>Zo lees je het spectrum:</strong> horizontaal zie je waar iemand staat tussen links en rechts (economisch), verticaal tussen progressief en conservatief (cultureel). Hoe dichter een partij bij “Jij” staat, hoe vergelijkbaarder de standpunten. Voor je beste match blijft het matchpercentage leidend.</p>
         </div>
       </section>
     } @else {
