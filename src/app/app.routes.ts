@@ -1,8 +1,6 @@
 import type { Routes } from '@angular/router';
 import { adminAuthGuard } from './guards/admin-auth.guard';
-import { Routes } from '@angular/router';
-import { AdminPageComponent } from './admin-page/admin-page.component';
-import { StellingBeherenComponent } from './admin-page/components/stelling-beheren/stelling-beheren.component';
+import { partyAdminAuthGuard } from './guards/party-admin-auth.guard';
 
 export const routes: Routes = [
   {
@@ -27,6 +25,11 @@ export const routes: Routes = [
     canActivate: [adminAuthGuard],
     loadComponent: async () => import('./admin-page/admin-page.component').then(module => module.AdminPageComponent),
     loadChildren: async () => import('./admin-page/admin-page.routes').then(module => module.routes),
+  },
+  {
+    path: 'partij',
+    canActivate: [partyAdminAuthGuard],
+    loadComponent: async () => import('./party-admin-page/party-admin-page.component').then(module => module.PartyAdminPageComponent),
   },
   {
     path: 'stemwijzer',
