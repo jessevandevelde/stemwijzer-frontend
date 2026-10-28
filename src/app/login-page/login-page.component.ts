@@ -29,9 +29,9 @@ export class LoginPageComponent {
     this.errorMessage.set(null);
 
     this.loginPageService.login(credentials).subscribe({
-      next: () => {
+      next: (role) => {
         this.loading.set(false);
-        void this.router.navigateByUrl('/admin');
+        void this.router.navigateByUrl(role === 'party-admin' ? '/partij' : '/admin');
       },
       error: (error: unknown) => {
         this.loading.set(false);
