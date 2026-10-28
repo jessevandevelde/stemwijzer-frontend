@@ -1,8 +1,5 @@
 import type { Routes } from '@angular/router';
 import { adminAuthGuard } from './guards/admin-auth.guard';
-import { Routes } from '@angular/router';
-import { AdminPageComponent } from './admin-page/admin-page.component';
-import { StellingBeherenComponent } from './admin-page/components/stelling-beheren/stelling-beheren.component';
 
 export const routes: Routes = [
   {
