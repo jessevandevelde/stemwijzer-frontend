@@ -1,86 +1,34 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-
-interface Examen {
-  naam: string;
-  beschrijving: string;
-  status: string;
-}
-
-interface Kandidaat {
-  initialen: string;
-  naam: string;
-  klas: string;
-  resultaat: string;
-  status: string;
-}
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { AdminHeaderComponent } from './components/admin-header/admin-header.component';
+import { AdminNavigationComponent } from './components/admin-navigation/admin-navigation.component';
 
 @Component({
-  selector: 'app-admin-page',
-  standalone: true,
-  imports: [CommonModule],
+  selector: 'stw-admin-page',
+  imports: [RouterOutlet, AdminHeaderComponent, AdminNavigationComponent],
   templateUrl: './admin-page.component.html',
-  styleUrl: './admin-page.component.css'
+  styleUrl: './admin-page.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminPageComponent {
-  examens: Examen[] = [
-    {
-      naam: 'Rekenen niveau 4',
-      beschrijving: 'Centraal examen rekenen voor mbo niveau 4',
-      status: 'Ingepland'
-    },
-    {
-      naam: 'Nederlands schrijven',
-      beschrijving: 'Schriftelijk examen Nederlandse taal',
-      status: 'Ingepland'
-    },
-    {
-      naam: 'Engels spreken',
-      beschrijving: 'Mondeling examen Engels op niveau A2',
-      status: 'Concept'
-    }
-  ];
+  protected readonly userEmail: string;
 
-  kandidaten: Kandidaat[] = [
-    {
-      initialen: 'SZ',
-      naam: 'Soufian Zeddi',
-      klas: 'SD2A',
-      resultaat: '8,1',
-      status: 'Afgerond'
-    },
-    {
-      initialen: 'MB',
-      naam: 'Mohammed Bakker',
-      klas: 'SD2A',
-      resultaat: '7,4',
-      status: 'Afgerond'
-    },
-    {
-      initialen: 'YN',
-      naam: 'Yassin Noor',
-      klas: 'SD2B',
-      resultaat: '-',
-      status: 'Ingepland'
-    },
-    {
-      initialen: 'LV',
-      naam: 'Lars de Vries',
-      klas: 'SD2B',
-      resultaat: '6,8',
-      status: 'Afgerond'
-    }
-  ];
+  protected readonly userName: string;
 
-  examenToevoegen(): void {
-    alert('Hier komt later het formulier voor een nieuw examen.');
+  private readonly authService = inject(AuthService);
+
+  private readonly router = inject(Router);
+
+  public constructor() {
+    const session = this.authService.getSession();
+
+    this.userEmail = session?.email ?? '';
+    this.userName = session?.name ?? 'Super Admin';
   }
 
-  studentToevoegen(): void {
-    alert('Hier komt later het formulier voor een nieuwe student.');
-  }
-
-  bewerken(naam: string): void {
-    alert(`${naam} bewerken`);
+  protected handleLogout(): void {
+    this.authService.endSession();
+    void this.router.navigateByUrl('/login');
   }
 }

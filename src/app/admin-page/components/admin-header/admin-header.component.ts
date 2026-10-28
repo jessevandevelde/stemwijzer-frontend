@@ -14,7 +14,5 @@ export class AdminHeaderComponent {
 
   public readonly userName = input.required<string>();
 
-  public readonly roleLabel = input('Super admin');
-
   public readonly logoutRequested = output();
 }
