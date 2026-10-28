@@ -1,11 +1,410 @@
-<div class="admin-shell">
-  <stw-admin-header (logoutRequested)="handleLogout()" [userEmail]="userEmail" [userName]="userName" />
-  <div class="admin-body">
-    <aside class="admin-sidebar">
-      <stw-admin-navigation />
-    </aside>
-    <main class="admin-content">
-      <router-outlet />
-    </main>
-  </div>
+<div class="admin-layou]t">
+
+  <!-- Zijbalk -->
+  <aside class="sidebar">
+    <div class="logo">
+<img class="logo-image" src="apps/images/logo.svg" alt="StemWijzer logo">
+      <div class="logo-text">
+        <h2>StemWijzer</h2>
+        <p>CMS<br>BEHEER</p>
+      </div>
+    </div>
+
+    <div class="admin-label">
+      <span>PRODEMOS ADMIN</span>
+      <span class="online-dot"></span>
+    </div>
+
+    <nav aria-label="Beheermenu">
+      <a class="nav-item">
+        <span class="nav-icon" aria-hidden="true">▦</span>
+        <span class="nav-label">Overzicht</span>
+      </a>
+
+      <a class="nav-item active" aria-current="page">
+        <span class="nav-icon" aria-hidden="true">▤</span>
+        <span class="nav-label">Stellingen</span>
+      </a>
+
+      <a class="nav-item">
+        <span class="nav-icon" aria-hidden="true">♙</span>
+        <span class="nav-label">Partijen</span>
+      </a>
+
+      <a class="nav-item">
+        <span class="nav-icon" aria-hidden="true">⚙</span>
+        <span class="nav-label">Instellingen</span>
+      </a>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+
+    <!-- Bovenbalk -->
+    <header class="topbar">
+      <input
+        class="search-input"
+        type="search"
+        aria-label="Zoeken"
+        placeholder="⌕ Zoek stellingen, partijen of trefwoorden..."
+      >
+
+      <div class="topbar-actions">
+        <button type="button" class="primary-button">
+          + Nieuwe Stelling
+        </button>
+
+        <button type="button" class="secondary-button">
+          ⚑ Valideren &amp; Publiceren
+        </button>
+
+        <button
+          type="button"
+          class="notification-button"
+          aria-label="Meldingen"
+        >
+          ♧
+        </button>
+
+        <div class="user">
+          <div class="user-details">
+            <strong>Super Admin</strong>
+            <p>ProDemos Nationaal</p>
+          </div>
+
+          <div class="avatar">A</div>
+        </div>
+      </div>
+    </header>
+
+    <section class="page-content">
+
+      <!-- Titel -->
+      <div class="page-heading">
+        <div>
+          <p class="breadcrumb">
+            Stellingen › Hypotheekrenteaftrek bewerken
+          </p>
+
+          <div class="heading-title">
+            <h1>Stelling Beheren</h1>
+            <span class="status">• Actief</span>
+          </div>
+        </div>
+
+        <div class="page-actions">
+          <button type="button" class="secondary-button">
+            Annuleren
+          </button>
+
+          <button type="button" class="danger-button">
+            ♜ Verwijder stelling
+          </button>
+
+          <button type="button" class="primary-button">
+            ▣ Stelling opslaan
+          </button>
+        </div>
+      </div>
+
+      <!-- Basisgegevens -->
+      <section class="panel" aria-labelledby="basis-title">
+        <div class="panel-heading">
+          <h2 id="basis-title">Basisgegevens</h2>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="thema">Thema / Korte titel</label>
+            <input
+              id="thema"
+              type="text"
+              value="Hypotheekrenteaftrek"
+            >
+          </div>
+
+          <div class="form-field">
+            <label for="categorie">Categorie</label>
+            <select id="categorie">
+              <option>Wonen &amp; Huisvesting</option>
+              <option>Economie</option>
+              <option>Onderwijs</option>
+              <option>Zorg</option>
+              <option>Klimaat</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="stelling">Stellingtekst</label>
+          <textarea
+            id="stelling"
+            rows="2"
+          >De hypotheekrenteaftrek moet worden afgeschaft.</textarea>
+        </div>
+
+        <div class="form-field">
+          <label for="toelichting">
+            Toelichting voor kiezer (‘Meer weten’)
+          </label>
+
+          <textarea
+            id="toelichting"
+            class="explanation-input"
+            rows="3"
+          >De hypotheekrenteaftrek (HRA) stelt huiseigenaren in staat de rente op hun eigenwoningschuld fiscaal af te trekken van het inkomen. Voorstanders van afschaffing vinden dat het de huizenprijzen opdrijft en ongelijkheid vergroot, terwijl tegenstanders vrezen voor stijgende maandlasten en onzekerheid voor zittende huizenbezitters.</textarea>
+        </div>
+      </section>
+
+      <!-- Politiek spectrum -->
+      <section class="panel" aria-labelledby="spectrum-title">
+        <div class="panel-heading">
+          <h2 id="spectrum-title">Politiek spectrum</h2>
+        </div>
+
+        <div class="spectrum-grid">
+          <div>
+            <div class="spectrum-heading">
+              <span id="economisch-label">Economisch</span>
+              <span class="selection-label">Economische richting</span>
+            </div>
+
+            <div
+              class="segment-control"
+              role="group"
+              aria-labelledby="economisch-label"
+            >
+              <label class="choice-option">
+                <input type="radio" name="economisch" value="links" checked>
+                <span>Links</span>
+              </label>
+
+              <label class="choice-option">
+                <input type="radio" name="economisch" value="midden">
+                <span>Midden</span>
+              </label>
+
+              <label class="choice-option">
+                <input type="radio" name="economisch" value="rechts">
+                <span>Rechts</span>
+              </label>
+            </div>
+
+            <p class="spectrum-description">
+              Koppelt ‘Eens’ aan nivellering en marktregulatie.
+            </p>
+          </div>
+
+          <div>
+            <div class="spectrum-heading">
+              <span id="maatschappelijk-label">Maatschappelijk</span>
+              <span class="selection-label">Maatschappelijke richting</span>
+            </div>
+
+            <div
+              class="segment-control"
+              role="group"
+              aria-labelledby="maatschappelijk-label"
+            >
+              <label class="choice-option">
+                <input
+                  type="radio"
+                  name="maatschappelijk"
+                  value="progressief"
+                  checked
+                >
+                <span>Progressief</span>
+              </label>
+
+              <label class="choice-option">
+                <input type="radio" name="maatschappelijk" value="midden">
+                <span>Midden</span>
+              </label>
+
+              <label class="choice-option">
+                <input
+                  type="radio"
+                  name="maatschappelijk"
+                  value="conservatief"
+                >
+                <span>Conservatief</span>
+              </label>
+            </div>
+
+            <p class="spectrum-description">
+              Koppelt ‘Eens’ aan systeemhervorming versus status-quo behoud.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Partijstandpunten -->
+      <section class="panel" aria-labelledby="partijen-title">
+        <div class="panel-heading">
+          <h2 id="partijen-title">
+            <span class="party-heading-icon" aria-hidden="true">♙</span>
+            Partijstandpunten
+          </h2>
+
+          <div class="party-progress">
+            <span>4 van 18 partijen ingevuld</span>
+
+            <div
+              class="progress-track"
+              role="progressbar"
+              aria-label="Ingevulde partijen"
+              aria-valuenow="4"
+              aria-valuemin="0"
+              aria-valuemax="18"
+            >
+              <div class="progress-fill" style="width: 22.22%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="party-list">
+
+          <!-- GroenLinks-PvdA -->
+          <div class="party-row">
+            <div class="party-information">
+              <div class="party-avatar">GLP</div>
+              <div>
+                <strong>GroenLinks-PvdA</strong>
+                <p>25 zetels</p>
+              </div>
+            </div>
+
+            <div class="party-choice" role="group" aria-label="Standpunt GroenLinks-PvdA">
+              <label class="choice-option agree">
+                <input type="radio" name="glp" value="eens" checked>
+                <span>Eens</span>
+              </label>
+              <label class="choice-option neutral">
+                <input type="radio" name="glp" value="geen">
+                <span>Geen</span>
+              </label>
+              <label class="choice-option disagree">
+                <input type="radio" name="glp" value="oneens">
+                <span>Oneens</span>
+              </label>
+            </div>
+
+            <input
+              class="party-explanation"
+              type="text"
+              aria-label="Toelichting GroenLinks-PvdA"
+              value="De hypotheekrenteaftrek drijft prijzen op en subsidieert vooral hoge inkomens."
+            >
+          </div>
+
+          <!-- VVD -->
+          <div class="party-row">
+            <div class="party-information">
+              <div class="party-avatar">VVD</div>
+              <div>
+                <strong>VVD</strong>
+                <p>24 zetels</p>
+              </div>
+            </div>
+
+            <div class="party-choice" role="group" aria-label="Standpunt VVD">
+              <label class="choice-option agree">
+                <input type="radio" name="vvd" value="eens">
+                <span>Eens</span>
+              </label>
+              <label class="choice-option neutral">
+                <input type="radio" name="vvd" value="geen">
+                <span>Geen</span>
+              </label>
+              <label class="choice-option disagree">
+                <input type="radio" name="vvd" value="oneens" checked>
+                <span>Oneens</span>
+              </label>
+            </div>
+
+            <input
+              class="party-explanation"
+              type="text"
+              aria-label="Toelichting VVD"
+              value="Huizenbezitters moeten kunnen rekenen op stabiel fiscaal beleid."
+            >
+          </div>
+
+          <!-- NSC -->
+          <div class="party-row">
+            <div class="party-information">
+              <div class="party-avatar">NSC</div>
+              <div>
+                <strong>NSC</strong>
+                <p>20 zetels</p>
+              </div>
+            </div>
+
+            <div class="party-choice" role="group" aria-label="Standpunt NSC">
+              <label class="choice-option agree">
+                <input type="radio" name="nsc" value="eens">
+                <span>Eens</span>
+              </label>
+              <label class="choice-option neutral">
+                <input type="radio" name="nsc" value="geen" checked>
+                <span>Geen</span>
+              </label>
+              <label class="choice-option disagree">
+                <input type="radio" name="nsc" value="oneens">
+                <span>Oneens</span>
+              </label>
+            </div>
+
+            <input
+              class="party-explanation"
+              type="text"
+              aria-label="Toelichting NSC"
+              value="Niet direct afschaffen, wel geleidelijk herzien in samenhang met een integrale hervorming."
+            >
+          </div>
+
+          <!-- D66 -->
+          <div class="party-row">
+            <div class="party-information">
+              <div class="party-avatar">D66</div>
+              <div>
+                <strong>D66</strong>
+                <p>9 zetels</p>
+              </div>
+            </div>
+
+            <div class="party-choice" role="group" aria-label="Standpunt D66">
+              <label class="choice-option agree">
+                <input type="radio" name="d66" value="eens" checked>
+                <span>Eens</span>
+              </label>
+              <label class="choice-option neutral">
+                <input type="radio" name="d66" value="geen">
+                <span>Geen</span>
+              </label>
+              <label class="choice-option disagree">
+                <input type="radio" name="d66" value="oneens">
+                <span>Oneens</span>
+              </label>
+            </div>
+
+            <input
+              class="party-explanation"
+              type="text"
+              aria-label="Toelichting D66"
+              value="Stapsgewijs afbouwen om een gelijk speelveld op de woningmarkt te creëren."
+            >
+          </div>
+        </div>
+
+        <div class="party-footer">
+          <p>Nog 14 partijen zonder toelichting</p>
+
+          <button type="button" class="text-button">
+            Alle 18 partijen openvouwen ⌄
+          </button>
+        </div>
+      </section>
+    </section>
+  </main>
 </div>
