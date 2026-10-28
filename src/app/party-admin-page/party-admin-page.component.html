@@ -1,10 +1,18 @@
 <div class="party-shell">
   <stw-admin-header roleLabel="Partijbeheerder" (logoutRequested)="handleLogout()" [userEmail]="userEmail" [userName]="userName" />
   <main class="party-content">
+    <stw-party-details-form
+      (submitDetails)="handleSaveDetails($event)"
+      [errorMessage]="detailsErrorMessage()"
+      [party]="party()"
+      [saved]="detailsSaved()"
+      [saving]="savingDetails()"
+    />
+
     <section class="panel">
       <div class="panel-header">
         <div class="panel-heading">
-          <h2>Standpunten van {{ partyName }}</h2>
+          <h2>Standpunten van {{ partyName() }}</h2>
           <p>Kies per stelling het standpunt van je partij. {{ answeredCount() }} van {{ statements().length }} stellingen ingevuld.</p>
         </div>
       </div>

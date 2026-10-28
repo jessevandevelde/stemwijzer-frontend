@@ -87,7 +87,7 @@
     <textarea class="field-textarea" formControlName="description" id="party-description" placeholder="Korte omschrijving van de partij…" rows="3"></textarea>
   </div>
 
-  <label class="checkbox-field">
+  <label class="checkbox-field" [hidden]="!showActiveToggle()">
     <input formControlName="isActive" type="checkbox" />
     <span>Partij is actief</span>
   </label>

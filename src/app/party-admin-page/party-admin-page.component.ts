@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import type { OnInit } from '@angular/core';
+import type { OnInit, WritableSignal } from '@angular/core';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AdminHeaderComponent } from '../admin-page/components/admin-header/admin-header.component';
@@ -8,7 +8,9 @@ import { EmptyStateComponent } from '../components/empty-state/empty-state.compo
 import { SecurityNoticeComponent } from '../components/security-notice/security-notice.component';
 import { AuthService } from '../services/auth.service';
 import type { Answer } from '../types/answer.interface';
-import type { PartyStatementAnswer } from './party-admin-page.interfaces';
+import type { Party } from '../types/party.interface';
+import { PartyDetailsFormComponent } from './components/party-details-form/party-details-form.component';
+import type { PartyDetailsFormValue, PartyStatementAnswer } from './party-admin-page.interfaces';
 import { PartyAdminPageService } from './party-admin-page.service';
 
 const UNAUTHORIZED_STATUS = 401;
@@ -20,7 +22,7 @@ interface AnswerOption {
 
 @Component({
   selector: 'stw-party-admin-page',
-  imports: [AdminHeaderComponent, EmptyStateComponent, SecurityNoticeComponent],
+  imports: [AdminHeaderComponent, EmptyStateComponent, PartyDetailsFormComponent, SecurityNoticeComponent],
   templateUrl: './party-admin-page.component.html',
   styleUrl: './party-admin-page.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,11 +44,21 @@ export class PartyAdminPageComponent implements OnInit {
 
   protected readonly answeredCount = computed(() => this.statements().filter(statement => statement.answer !== null).length);
 
+  protected readonly party = signal<Party | null>(null);
+
+  protected readonly savingDetails = signal(false);
+
+  protected readonly detailsSaved = signal(false);
+
+  protected readonly detailsErrorMessage = signal<string | null>(null);
+
+  protected readonly partyName = computed(() => this.party()?.name ?? this.sessionPartyName);
+
   protected readonly userEmail: string;
 
   protected readonly userName: string;
 
-  protected readonly partyName: string;
+  private readonly sessionPartyName: string;
 
   private readonly authService = inject(AuthService);
 
@@ -59,10 +71,19 @@ export class PartyAdminPageComponent implements OnInit {
 
     this.userEmail = session?.email ?? '';
     this.userName = session?.name ?? 'Partijbeheerder';
-    this.partyName = session?.partyName ?? '';
+    this.sessionPartyName = session?.partyName ?? '';
   }
 
   public ngOnInit(): void {
+    this.partyAdminPageService.getParty().subscribe({
+      next: (party) => {
+        this.party.set(party);
+      },
+      error: (error: unknown) => {
+        this.handleError(error, this.detailsErrorMessage);
+      },
+    });
+
     this.partyAdminPageService.listStatements().subscribe({
       next: (response) => {
         this.statements.set(response.statements);
@@ -70,7 +91,26 @@ export class PartyAdminPageComponent implements OnInit {
       },
       error: (error: unknown) => {
         this.loading.set(false);
-        this.handleError(error);
+        this.handleError(error, this.errorMessage);
+      },
+    });
+  }
+
+  protected handleSaveDetails(value: PartyDetailsFormValue): void {
+    this.savingDetails.set(true);
+    this.detailsSaved.set(false);
+    this.detailsErrorMessage.set(null);
+
+    this.partyAdminPageService.updateParty(value).subscribe({
+      next: (party) => {
+        this.party.set(party);
+        this.authService.updatePartyName(party.name);
+        this.savingDetails.set(false);
+        this.detailsSaved.set(true);
+      },
+      error: (error: unknown) => {
+        this.savingDetails.set(false);
+        this.handleError(error, this.detailsErrorMessage);
       },
     });
   }
@@ -90,7 +130,7 @@ export class PartyAdminPageComponent implements OnInit {
       },
       error: (error: unknown) => {
         this.savingStatementId.set(null);
-        this.handleError(error);
+        this.handleError(error, this.errorMessage);
       },
     });
   }
@@ -101,13 +141,13 @@ export class PartyAdminPageComponent implements OnInit {
   }
 
   // Een verlopen of ongeldig token stuurt de gebruiker terug naar de loginpagina.
-  private handleError(error: unknown): void {
+  private handleError(error: unknown, message: WritableSignal<string | null>): void {
     if (error instanceof HttpErrorResponse && error.status === UNAUTHORIZED_STATUS) {
       this.handleLogout();
 
       return;
     }
 
-    this.errorMessage.set(extractErrorMessage(error));
+    message.set(extractErrorMessage(error));
   }
 }

@@ -45,6 +45,9 @@ export class PartyFormComponent {
 
   public readonly loading = input(false);
 
+  // Partijbeheerders mogen hun partij niet zelf (de)activeren.
+  public readonly showActiveToggle = input(true);
+
   public readonly submitForm = output<PartyFormValue>();
 
   protected readonly maxSeats = MAX_SEATS;
