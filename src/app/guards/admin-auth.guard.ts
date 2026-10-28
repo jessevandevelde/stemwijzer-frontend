@@ -7,9 +7,9 @@ export const adminAuthGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  if (authService.hasRole('superadmin')) {
+  if (authService.isAuthenticated()) {
     return true;
   }
 
-  return router.parseUrl(authService.hasRole('party-admin') ? '/partij' : '/login');
+  return router.parseUrl('/login');
 };
