@@ -3,14 +3,6 @@ import { adminAuthGuard } from './guards/admin-auth.guard';
 
 export const routes: Routes = [
   {
-    path: 'admin',
-    component: AdminPageComponent
-  },
-  {
-    path: 'admin/stelling-beheren',
-    component: StellingBeherenComponent
-  },
-  {
     path: '',
     pathMatch: 'full',
     redirectTo: 'login',
@@ -33,8 +25,4 @@ export const routes: Routes = [
     path: '**',
     redirectTo: 'login',
   },
-];
-    redirectTo: 'admin',
-    pathMatch: 'full'
-  }
 ];
