@@ -1,7 +1,7 @@
 import { HttpClient, type HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import type { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { environment } from '../environments/environment';
 
 export interface ApiRequestOptions {
   readonly params?: HttpParams | Record<string, string>

@@ -4,14 +4,6 @@ import { partyAdminAuthGuard } from './guards/party-admin-auth.guard';
 
 export const routes: Routes = [
   {
-    path: 'admin',
-    component: AdminPageComponent
-  },
-  {
-    path: 'admin/stelling-beheren',
-    component: StellingBeherenComponent
-  },
-  {
     path: '',
     pathMatch: 'full',
     redirectTo: 'login',
@@ -19,6 +11,11 @@ export const routes: Routes = [
   {
     path: 'login',
     loadChildren: async () => import('./login-page/login-page.routes').then(module => module.routes),
+  },
+  {
+    path: 'admin/stelling-beheren',
+    canActivate: [adminAuthGuard],
+    loadComponent: async () => import('./admin-page/components/stelling-beheren/stelling-beheren.component').then(module => module.StellingBeherenComponent),
   },
   {
     path: 'admin',
@@ -39,8 +36,4 @@ export const routes: Routes = [
     path: '**',
     redirectTo: 'login',
   },
-];
-    redirectTo: 'admin',
-    pathMatch: 'full'
-  }
 ];
