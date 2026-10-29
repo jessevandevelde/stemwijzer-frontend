@@ -5,6 +5,7 @@ export interface AuthSession {
   readonly userId: number
   readonly name: string
   readonly email: string
+  readonly partyName?: string
 }
 
 const AUTH_STORAGE_KEY = 'stw-auth-session';

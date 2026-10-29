@@ -12,6 +12,11 @@ interface SpectrumPoint {
   readonly y: number
 }
 
+interface PartyDetail {
+  readonly party: Party
+  readonly match: PartyMatch
+}
+
 const SPECTRUM_MIN = 12;
 const SPECTRUM_MAX = 88;
 const HALF = 2;
@@ -63,7 +68,7 @@ export class ResultsComponent {
     };
   });
 
-  protected readonly selectedParty = signal<Party | null>(null);
+  protected readonly partyDetail = signal<PartyDetail | null>(null);
 
   protected readonly partyLoading = signal(false);
 
@@ -79,14 +84,14 @@ export class ResultsComponent {
 
   private readonly service = inject(StemwijzerPageService);
 
-  protected openPartyDetail(partyId: number): void {
+  protected openPartyDetail(match: PartyMatch): void {
     this.partyLoading.set(true);
     this.partyError.set(null);
 
-    this.service.getParty(partyId).subscribe({
+    this.service.getParty(match.partyId).subscribe({
       next: (party) => {
         this.partyLoading.set(false);
-        this.selectedParty.set(party);
+        this.partyDetail.set({ party, match });
       },
       error: () => {
         this.partyLoading.set(false);
@@ -96,7 +101,7 @@ export class ResultsComponent {
   }
 
   protected closePartyDetail(): void {
-    this.selectedParty.set(null);
+    this.partyDetail.set(null);
   }
 
   protected percentage(match: PartyMatch): number {

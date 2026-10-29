@@ -29,7 +29,7 @@
           <button
             class="best-match-link"
             type="button"
-            (click)="openPartyDetail(winner.partyId)"
+            (click)="openPartyDetail(winner)"
             [disabled]="partyLoading()"
           >
             {{ winner.partyName }}
@@ -118,6 +118,6 @@
   </div>
 </main>
 
-@if (selectedParty(); as party) {
-  <stw-party-detail (closed)="closePartyDetail()" [party]="party" />
+@if (partyDetail(); as detail) {
+  <stw-party-detail (closed)="closePartyDetail()" [match]="detail.match" [party]="detail.party" />
 }

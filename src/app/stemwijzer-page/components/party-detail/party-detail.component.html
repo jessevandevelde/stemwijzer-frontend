@@ -17,6 +17,11 @@
     }
 
     <h2 class="name" id="party-detail-name">{{ party().name }}</h2>
+
+    <div class="match-info">
+      <span class="match-badge"><span aria-hidden="true">★</span> Beste match · {{ percentage() }}%</span>
+      <span class="match-count">{{ match().matchedAnswers }} van {{ match().comparedAnswers }} antwoorden komen overeen</span>
+    </div>
     <p class="description">{{ party().description ?? 'Deze partij heeft nog geen beschrijving.' }}</p>
   </section>
 </div>
