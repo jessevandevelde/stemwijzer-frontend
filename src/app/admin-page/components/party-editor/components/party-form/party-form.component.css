@@ -71,6 +71,35 @@
   background-color: color-mix(in srgb, var(--color-accent-blue) 20%, var(--color-surface));
 }
 
+.logo-block:has(input[type="file"]:focus-visible) .logo-edit {
+  outline: 2px solid var(--color-accent-blue);
+  outline-offset: 2px;
+}
+
+.logo-edit-busy {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.logo-remove {
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-danger);
+  cursor: pointer;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+}
+
+.logo-remove[hidden] {
+  display: none;
+}
+
+.logo-remove:hover {
+  background-color: var(--color-danger-background);
+}
+
 @media (width <= 30rem) {
   .field-row {
     grid-template-columns: 1fr;

@@ -66,20 +66,22 @@
     />
     <span class="logo-text">
       <strong>Logo / Symbool</strong>
-      <span>{{ form.controls.imageUrl.value.trim() === '' ? 'Gevectoriseerde partijbadge' : 'Afbeelding via URL' }}</span>
+      <span>{{ logoStatus() }}</span>
     </span>
-    <button class="logo-edit" type="button" (click)="toggleLogoInput()" [attr.aria-expanded]="showLogoInput()">
-      {{ showLogoInput() ? 'Klaar' : 'Wijzigen' }}
-    </button>
+    <input
+      class="visually-hidden"
+      id="party-logo-file"
+      type="file"
+      (change)="handleLogoSelected($event)"
+      [accept]="logoTypes"
+      [disabled]="uploadingLogo()"
+    />
+    <label class="logo-edit" for="party-logo-file" [class.logo-edit-busy]="uploadingLogo()">{{ hasLogo() ? 'Andere foto' : 'Foto uploaden' }}</label>
+    <button class="logo-remove" type="button" (click)="removeLogo()" [hidden]="!hasLogo()">Verwijderen</button>
   </div>
 
-  @if (showLogoInput()) {
-    <div class="field">
-      <label class="field-label" for="party-image-url">Logo-URL (optioneel)</label>
-      <div class="field-input">
-        <input formControlName="imageUrl" id="party-image-url" placeholder="https://example.com/logo.png" type="text" />
-      </div>
-    </div>
+  @if (logoError(); as message) {
+    <p class="field-error" role="alert">{{ message }}</p>
   }
 
   <div class="field">

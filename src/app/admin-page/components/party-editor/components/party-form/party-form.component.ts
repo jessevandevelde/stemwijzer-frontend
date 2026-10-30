@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, output, signal } from '@angular/core';
 import type { AbstractControl, ValidationErrors } from '@angular/forms';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PartyBadgeComponent } from '../../../../../components/party-badge/party-badge.component';
+import { UploadService } from '../../../../../services/upload.service';
 import type { PartyFormValue } from '../../../../admin-page.interfaces';
+import { extractErrorMessage } from '../../../../extract-error-message';
 
 const MAX_NAME_LENGTH = 100;
 const MAX_ABBREVIATION_LENGTH = 20;
@@ -11,6 +13,8 @@ const MAX_SEATS = 150;
 const COLOR_PATTERN = /^#[0-9A-Fa-f]{6}$/u;
 const WHOLE_NUMBER_PATTERN = /^\d+$/u;
 const FALLBACK_COLOR = '#16224F';
+const MAX_LOGO_BYTES = 2_097_152;
+const LOGO_TYPES: readonly string[] = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
 
 interface PartyFormControls {
   readonly name: FormControl<string>
@@ -52,7 +56,11 @@ export class PartyFormComponent {
 
   protected readonly maxSeats = MAX_SEATS;
 
-  protected readonly showLogoInput = signal(false);
+  protected readonly logoTypes = LOGO_TYPES.join(',');
+
+  protected readonly uploadingLogo = signal(false);
+
+  protected readonly logoError = signal<string | null>(null);
 
   protected readonly form = new FormGroup<PartyFormControls>({
     name: new FormControl('', { nonNullable: true, validators: [required, Validators.maxLength(MAX_NAME_LENGTH)] }),
@@ -66,6 +74,8 @@ export class PartyFormComponent {
     imageUrl: new FormControl('', { nonNullable: true }),
     isActive: new FormControl(true, { nonNullable: true }),
   });
+
+  private readonly uploadService = inject(UploadService);
 
   public constructor() {
     effect(() => {
@@ -103,8 +113,63 @@ export class PartyFormComponent {
     }
   }
 
-  protected toggleLogoInput(): void {
-    this.showLogoInput.update(isShown => !isShown);
+  protected hasLogo(): boolean {
+    return this.form.controls.imageUrl.value.trim() !== '';
+  }
+
+  protected logoStatus(): string {
+    if (this.uploadingLogo()) {
+      return 'Foto uploaden…';
+    }
+
+    return this.hasLogo() ? 'Eigen afbeelding' : 'Gevectoriseerde partijbadge';
+  }
+
+  // Uploadt de gekozen foto direct; het formulier bewaart daarna alleen het adres van de geüploade afbeelding.
+  protected handleLogoSelected(event: Event): void {
+    if (!(event.target instanceof HTMLInputElement)) {
+      return;
+    }
+
+    const file = event.target.files?.[0];
+
+    event.target.value = '';
+
+    if (file === undefined) {
+      return;
+    }
+
+    if (!LOGO_TYPES.includes(file.type)) {
+      this.logoError.set('Kies een PNG-, JPG-, GIF- of WebP-afbeelding.');
+
+      return;
+    }
+
+    if (file.size > MAX_LOGO_BYTES) {
+      this.logoError.set('De afbeelding mag maximaal 2 MB groot zijn.');
+
+      return;
+    }
+
+    this.logoError.set(null);
+    this.uploadingLogo.set(true);
+    this.uploadService.uploadImage(file).subscribe({
+      next: ({ url }) => {
+        this.uploadingLogo.set(false);
+        this.form.controls.imageUrl.setValue(url);
+        this.form.controls.imageUrl.markAsDirty();
+      },
+      error: (error: unknown) => {
+        this.uploadingLogo.set(false);
+        this.logoError.set(extractErrorMessage(error));
+      },
+    });
+  }
+
+  protected removeLogo(): void {
+    this.logoError.set(null);
+    this.form.controls.imageUrl.setValue('');
+    this.form.controls.imageUrl.markAsDirty();
   }
 
   protected handleSubmit(): void {

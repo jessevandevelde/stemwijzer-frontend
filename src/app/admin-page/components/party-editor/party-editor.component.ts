@@ -9,10 +9,11 @@ import { AdminPageService } from '../../admin-page.service';
 import { extractErrorMessage } from '../../extract-error-message';
 import { PartyAnswersComponent } from './components/party-answers/party-answers.component';
 import { PartyFormComponent } from './components/party-form/party-form.component';
+import { PartyLoginsComponent } from './components/party-logins/party-logins.component';
 
 @Component({
   selector: 'stw-party-editor',
-  imports: [ButtonComponent, ConfirmationDialogComponent, PartyAnswersComponent, PartyFormComponent, RouterLink, SecurityNoticeComponent],
+  imports: [ButtonComponent, ConfirmationDialogComponent, PartyAnswersComponent, PartyFormComponent, PartyLoginsComponent, RouterLink, SecurityNoticeComponent],
   templateUrl: './party-editor.component.html',
   styleUrl: './party-editor.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -87,9 +88,17 @@ export class PartyEditorComponent implements OnInit {
       ? this.adminPageService.createParty(value)
       : this.adminPageService.updateParty(this.partyId, value);
 
+    // Na het aanmaken blijft de superadmin op de partij, zodat er direct inloggegevens kunnen worden toegevoegd.
     save$.subscribe({
-      next: () => {
+      next: (party) => {
         this.saving.set(false);
+
+        if (this.partyId === null) {
+          void this.router.navigate(['/admin/partijen', party.id]);
+
+          return;
+        }
+
         this.goToPartyList();
       },
       error: (error: unknown) => {

@@ -6,7 +6,15 @@ import type { DashboardMetrics, PaginatedResult } from '../types/admin.interface
 import type { Party } from '../types/party.interface';
 import type { Answer } from '../types/answer.interface';
 import type { PartyStatementAnswer, Statement } from '../types/statement.interface';
-import type { PartyFormValue, PartyListFilters, StatementFormValue, StatementListFilters, StatusFilter } from './admin-page.interfaces';
+import type {
+  PartyAdminAccount,
+  PartyFormValue,
+  PartyListFilters,
+  PartyLoginFormValue,
+  StatementFormValue,
+  StatementListFilters,
+  StatusFilter,
+} from './admin-page.interfaces';
 
 function normalize(value: string): string {
   return value.trim().toLowerCase();
@@ -107,6 +115,25 @@ export class AdminPageService {
 
   public deleteParty(id: number): Observable<unknown> {
     return this.api.delete<unknown>(`/parties/${id}`);
+  }
+
+  public listPartyAdmins(partyId: number): Observable<PartyAdminAccount[]> {
+    return this.api.get<PartyAdminAccount[]>(`/parties/${partyId}/admins`);
+  }
+
+  public createPartyAdmin(partyId: number, value: PartyLoginFormValue): Observable<PartyAdminAccount> {
+    return this.api.post<PartyAdminAccount>(`/parties/${partyId}/admins`, value);
+  }
+
+  // Laat password weg als er geen nieuw wachtwoord is ingevuld, zodat het huidige wachtwoord blijft werken.
+  public updatePartyAdmin(id: number, value: PartyLoginFormValue): Observable<PartyAdminAccount> {
+    const body = value.password === null ? { name: value.name, email: value.email } : value;
+
+    return this.api.patch<PartyAdminAccount>(`/party-admins/${id}`, body);
+  }
+
+  public deletePartyAdmin(id: number): Observable<unknown> {
+    return this.api.delete<unknown>(`/party-admins/${id}`);
   }
 
   public getPartyAnswers(partyId: number): Observable<PartyStatementAnswer[]> {

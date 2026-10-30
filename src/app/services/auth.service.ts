@@ -1,10 +1,15 @@
 import { Injectable } from '@angular/core';
 
+export type UserRole = 'superadmin' | 'party-admin';
+
 export interface AuthSession {
   readonly token: string
   readonly userId: number
   readonly name: string
   readonly email: string
+  readonly role: UserRole
+  readonly partyId: number | null
+  readonly partyName: string | null
 }
 
 const AUTH_STORAGE_KEY = 'stw-auth-session';
@@ -14,9 +19,13 @@ function isAuthSession(value: unknown): value is AuthSession {
     return false;
   }
 
-  return 'token' in value && 'userId' in value && 'name' in value && 'email' in value
+  return 'token' in value && 'userId' in value && 'name' in value && 'email' in value && 'role' in value
+    && 'partyId' in value && 'partyName' in value
     && typeof value.token === 'string' && typeof value.userId === 'number'
-    && typeof value.name === 'string' && typeof value.email === 'string';
+    && typeof value.name === 'string' && typeof value.email === 'string'
+    && (value.role === 'superadmin' || value.role === 'party-admin')
+    && (value.partyId === null || typeof value.partyId === 'number')
+    && (value.partyName === null || typeof value.partyName === 'string');
 }
 
 @Injectable({
@@ -29,11 +38,17 @@ export class AuthService {
     return this.session !== null;
   }
 
+  public hasRole(role: UserRole): boolean {
+    return this.session?.role === role;
+  }
+
   public getSession(): AuthSession | null {
     return this.session;
   }
 
+  // Wist eerst een eventuele oude sessie, zodat een bewaarde sessie van een andere rol niet terugkomt na een refresh.
   public startSession(session: AuthSession, rememberMe: boolean): void {
+    this.endSession();
     this.session = session;
 
     const storage = rememberMe ? localStorage : sessionStorage;
