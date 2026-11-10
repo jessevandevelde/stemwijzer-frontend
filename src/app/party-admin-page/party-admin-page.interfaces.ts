@@ -14,3 +14,8 @@ export interface PartyStatementsResponse {
 }
 
 export type PartyDetailsFormValue = Omit<PartyFormValue, 'isActive'>;
+
+export interface PasswordChangeValue {
+  readonly currentPassword: string
+  readonly newPassword: string
+}
