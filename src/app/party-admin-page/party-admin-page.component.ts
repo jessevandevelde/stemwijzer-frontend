@@ -10,15 +10,16 @@ import { AuthService } from '../services/auth.service';
 import type { Answer } from '../types/answer.interface';
 import type { Party } from '../types/party.interface';
 import { PartyDetailsFormComponent } from './components/party-details-form/party-details-form.component';
+import { PartyPasswordFormComponent } from './components/party-password-form/party-password-form.component';
 import { PartyStatementRowComponent } from './components/party-statement-row/party-statement-row.component';
-import type { PartyDetailsFormValue, PartyStatementAnswer } from './party-admin-page.interfaces';
+import type { PartyDetailsFormValue, PartyStatementAnswer, PasswordChangeValue } from './party-admin-page.interfaces';
 import { PartyAdminPageService } from './party-admin-page.service';
 
 const UNAUTHORIZED_STATUS = 401;
 
 @Component({
   selector: 'stw-party-admin-page',
-  imports: [AdminHeaderComponent, EmptyStateComponent, PartyDetailsFormComponent, PartyStatementRowComponent, SecurityNoticeComponent],
+  imports: [AdminHeaderComponent, EmptyStateComponent, PartyDetailsFormComponent, PartyPasswordFormComponent, PartyStatementRowComponent, SecurityNoticeComponent],
   templateUrl: './party-admin-page.component.html',
   styleUrl: './party-admin-page.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,6 +42,10 @@ export class PartyAdminPageComponent implements OnInit {
   protected readonly detailsSaved = signal(false);
 
   protected readonly detailsErrorMessage = signal<string | null>(null);
+
+  protected readonly savingPassword = signal(false);
+
+  protected readonly passwordErrorMessage = signal<string | null>(null);
 
   protected readonly partyName = computed(() => this.party()?.name ?? this.sessionPartyName);
 
@@ -122,6 +127,24 @@ export class PartyAdminPageComponent implements OnInit {
   protected handleLogout(): void {
     this.authService.endSession();
     void this.router.navigateByUrl('/login');
+  }
+
+  // Na een geslaagde wijziging is de sessie in de backend al beëindigd, dus ook hier uitloggen.
+  protected handleChangePassword(value: PasswordChangeValue): void {
+    this.savingPassword.set(true);
+    this.passwordErrorMessage.set(null);
+
+    this.partyAdminPageService.changePassword(value).subscribe({
+      next: () => {
+        this.savingPassword.set(false);
+        this.authService.endSession();
+        void this.router.navigate(['/login'], { queryParams: { wachtwoord: 'gewijzigd' } });
+      },
+      error: (error: unknown) => {
+        this.savingPassword.set(false);
+        this.handleError(error, this.passwordErrorMessage);
+      },
+    });
   }
 
   private saveAnswer(statement: PartyStatementAnswer, answer: Answer, explanation?: string | null): void {

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BrandMarkComponent } from '../components/brand-mark/brand-mark.component';
 import { SecurityNoticeComponent } from '../components/security-notice/security-notice.component';
 import { LoginFormComponent } from './components/login-form/login-form.component';
@@ -19,6 +19,9 @@ export class LoginPageComponent {
   protected readonly errorMessage = signal<string | null>(null);
 
   protected readonly currentYear = new Date().getFullYear();
+
+  // Gezet door /partij na het wijzigen van het wachtwoord: /login?wachtwoord=gewijzigd
+  protected readonly passwordChanged = inject(ActivatedRoute).snapshot.queryParamMap.get('wachtwoord') === 'gewijzigd';
 
   private readonly loginPageService = inject(LoginPageService);
 

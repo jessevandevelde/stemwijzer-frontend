@@ -38,5 +38,7 @@
         </div>
       }
     </section>
+
+    <stw-party-password-form (submitPassword)="handleChangePassword($event)" [errorMessage]="passwordErrorMessage()" [saving]="savingPassword()" />
   </main>
 </div>

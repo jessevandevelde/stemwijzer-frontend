@@ -3,7 +3,7 @@ import type { Observable } from 'rxjs';
 import { ApiService } from '../services/api.service';
 import type { Answer } from '../types/answer.interface';
 import type { Party } from '../types/party.interface';
-import type { PartyDetailsFormValue, PartyStatementAnswer, PartyStatementsResponse } from './party-admin-page.interfaces';
+import type { PartyDetailsFormValue, PartyStatementAnswer, PartyStatementsResponse, PasswordChangeValue } from './party-admin-page.interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -28,5 +28,10 @@ export class PartyAdminPageService {
 
   public updateParty(value: PartyDetailsFormValue): Observable<Party> {
     return this.api.patch<Party>('/party-admin/party', value);
+  }
+
+  // De backend logt de partijbeheerder na een geslaagde wijziging overal uit.
+  public changePassword(value: PasswordChangeValue): Observable<unknown> {
+    return this.api.patch<unknown>('/party-admin/password', value);
   }
 }
